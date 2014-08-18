@@ -20,7 +20,7 @@
   "licenses": [
     {
       "type": "MIT",
-      "url": ""
+      "url": "https://github.com/kai-en/tracedpromise/blob/master/LICENSE"
     }
   ],
   "dependencies": {
