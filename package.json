@@ -1,0 +1,41 @@
+{
+  "name": "tracedpromise",
+  "description": "extended promise for tracing all .then calls",
+  "version": "0.0.1",
+  "author": "Kai-en",
+  "maintainers": [
+    {
+      "name": "kai-en",
+      "email": "wu.will.china@gmail.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kai-en/tracedpromise.git"
+  },
+  "scripts": {
+    "test": "make test/"
+  },
+  "main": "./lib/tracedpromise",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": ""
+    }
+  ],
+  "dependencies": {
+    "promise": "*"
+  },
+  "devDependencies": {
+    "q": "*",
+    "mocha": "*",
+    "chai-as-promised": "*"
+  },
+  "engine": {
+    "node": ">=0.10"
+  },
+  "keywords": [
+    "promise",
+    "trace"
+  ]
+}
