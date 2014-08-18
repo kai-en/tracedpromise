@@ -4,6 +4,7 @@ chai.use chaiAsPromised
 chai.should()
 
 TracedPromise = require "../lib/tracedpromise"
+Q = require "q"
 
 describe "TracedPromise", ->
   it "paralell", ->
@@ -32,4 +33,48 @@ describe "TracedPromise", ->
       error.length.should.eql 0
       null
 
-  
+  someService = (resultArray, ifRec) ->
+    trace = TracedPromise.trace()
+    new TracedPromise (res, rej) ->
+      setTimeout ->
+        res null
+      , 10
+    .then ->
+      resultArray.push trace if ifRec
+      null
+
+  it "call func", ->
+    resultArray = []
+    TracedPromise.all [1..10].map (v) ->
+      TracedPromise.trace v
+      someService resultArray, false
+      .then ->
+        someService resultArray, true
+    .then ->
+      error = []
+      [1..10].map (c) ->
+        f = resultArray.filter (v) ->
+          v == c
+        error.push c if f.length != 1
+        null
+      error.length.should.eql 0
+      null
+
+  it "Q.when", ->
+    resultArray = []
+    [1..10].map (v) ->
+      -> 
+        TracedPromise.trace v
+        someService resultArray, false
+        .then ->
+          someService resultArray, true
+    .reduce Q.when, Q()
+    .then ->
+      error = []
+      [1..10].map (c) ->
+        f = resultArray.filter (v) ->
+          v == c
+        error.push c if f.length != 1
+        null
+      error.length.should.eql 0
+      null
