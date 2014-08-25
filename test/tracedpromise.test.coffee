@@ -5,6 +5,7 @@ chai.should()
 
 TracedPromise = require "../lib/tracedpromise"
 Q = require "q"
+Promise = require "promise"
 
 describe "TracedPromise", ->
   it "paralell", ->
@@ -32,6 +33,8 @@ describe "TracedPromise", ->
         null
       error.length.should.eql 0
       null
+    , (err) ->
+      err.should.not.exists
 
   someService = (resultArray, ifRec) ->
     trace = TracedPromise.trace()
@@ -59,6 +62,8 @@ describe "TracedPromise", ->
         null
       error.length.should.eql 0
       null
+    , (err) ->
+      err.should.not.exists
 
   it "Q.when", ->
     resultArray = []
@@ -78,3 +83,30 @@ describe "TracedPromise", ->
         null
       error.length.should.eql 0
       null
+    , (err) ->
+      err.should.not.exists
+
+  it "work with original promise", ->
+    resultArray = []
+    TracedPromise.all [1,2].map (v) ->
+      if v == 1
+        TracedPromise.trace 1
+        return new TracedPromise (res, rej) ->
+          setTimeout ->
+            res null
+          , 100
+        .then ->
+          console.log this
+          resultArray.push this.trace if this.trace?
+      else
+        TracedPromise.trace 2
+        return new Promise (res, rej) ->
+          setTimeout ->
+            res null
+          , 100
+        .then ->
+          resultArray.push this.trace if this.trace?
+    .then ->
+      resultArray.should.length 1
+    , (err) ->
+      err.should.not.exists

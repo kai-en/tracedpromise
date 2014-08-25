@@ -10,13 +10,13 @@ module.exports = TracedPromise = (res, rej) ->
 TracedPromise.prototype.then = (resFunc, rejFunc) ->
   trace = this.trace
   if resFunc?
-    newRes = ->
+    newRes = =>
       tracing = trace
       resFunc.apply this, arguments
   else
     newRes = null
   if rejFunc?
-    newRej = ->
+    newRej = =>
       tracing = trace
       rejFunc.apply this, arguments
   else
@@ -27,13 +27,13 @@ TracedPromise.prototype.then = (resFunc, rejFunc) ->
 TracedPromise.prototype.done = (resFunc, rejFunc) ->
   trace = this.trace
   if resFunc?
-    newRes = ->
+    newRes = =>
       tracing = trace
       resFunc.apply this, arguments
   else
     newRes = null
   if rejFunc?
-    newRej = ->
+    newRej = =>
       tracing = trace
       rejFunc.apply this, arguments
   else
