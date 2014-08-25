@@ -25,7 +25,19 @@ Example:
     })
     .then(function() {
         var traced = TracedPromise.trace();
-        console.log(traced.msg);
+        // if you use this static way before, you will not know if it is from a normal Promise
+        // so you may log some messages are not belong to this normal Promise
+        // but in this way, you should not be worried about the "this" pointer be changed
+
+        // or you can use the "this" pointer as after
+        if (this instanceof TracedPromise) {
+          traced = this.trace
+          console.log(traced.msg);
+        } 
+        // in this case you will know it is not from a normal Promise so you didn't log for normal Promise
+        // but you should be careful do not change the "this" pointer
+        // you should only use "this.trace" in the ".then" callback
+        
     });
 
 Notice

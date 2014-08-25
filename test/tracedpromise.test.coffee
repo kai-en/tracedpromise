@@ -88,6 +88,10 @@ describe "TracedPromise", ->
 
   it "work with original promise", ->
     resultArray = []
+    logger =
+      log : (self) ->
+        if self instanceof TracedPromise
+          resultArray.push self.trace
     TracedPromise.all [1,2].map (v) ->
       if v == 1
         TracedPromise.trace 1
@@ -96,8 +100,8 @@ describe "TracedPromise", ->
             res null
           , 100
         .then ->
-          console.log this
-          resultArray.push this.trace if this.trace?
+          logger.log this
+          # resultArray.push this.trace if this instanceof TracedPromise
       else
         TracedPromise.trace 2
         return new Promise (res, rej) ->
@@ -105,7 +109,8 @@ describe "TracedPromise", ->
             res null
           , 100
         .then ->
-          resultArray.push this.trace if this.trace?
+          logger.log this
+          # resultArray.push this.trace if this instanceof TracedPromise
     .then ->
       resultArray.should.length 1
     , (err) ->
